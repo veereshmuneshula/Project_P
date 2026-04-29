@@ -3,15 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>ChatPro Plus - Advanced Real-time Messenger</title>
+    <title>ChatPro - Real-time Messenger with Cloudinary</title>
     
-    <!-- Google Fonts - Poppins -->
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     
     <style>
@@ -292,27 +291,6 @@
             font-size: 18px;
         }
 
-        .chat-actions {
-            display: flex;
-            gap: 12px;
-        }
-
-        .chat-action-btn {
-            background: none;
-            border: none;
-            color: #8696A0;
-            font-size: 20px;
-            cursor: pointer;
-            padding: 6px;
-            border-radius: 50%;
-            transition: all 0.2s;
-        }
-
-        .chat-action-btn:hover {
-            background: #2A3942;
-            color: #25D366;
-        }
-
         .member-count {
             color: #8696A0;
             font-size: 12px;
@@ -329,40 +307,6 @@
             gap: 8px;
         }
 
-        /* Message Selection Mode */
-        .selection-mode .message {
-            cursor: pointer;
-            transition: opacity 0.2s;
-        }
-
-        .selection-mode .message.selected {
-            opacity: 0.6;
-            border: 2px solid #25D366;
-        }
-
-        .selection-bar {
-            background: #25D366;
-            padding: 12px 20px;
-            display: none;
-            justify-content: space-between;
-            align-items: center;
-            color: white;
-        }
-
-        .selection-bar.active {
-            display: flex;
-        }
-
-        .selection-bar button {
-            background: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 500;
-        }
-
         /* Message Bubbles */
         .message {
             max-width: 70%;
@@ -370,7 +314,6 @@
             border-radius: 16px;
             position: relative;
             animation: fadeIn 0.3s ease;
-            transition: all 0.2s;
         }
 
         @keyframes fadeIn {
@@ -398,16 +341,6 @@
             border-bottom-left-radius: 4px;
         }
 
-        .message.view-once {
-            opacity: 0.8;
-            filter: blur(2px);
-            transition: all 0.3s;
-        }
-
-        .message.view-once.viewed {
-            display: none;
-        }
-
         .message-sender {
             font-size: 11px;
             color: #25D366;
@@ -418,13 +351,7 @@
         .message-text {
             font-size: 14px;
             word-wrap: break-word;
-            font-weight: 400;
-        }
-
-        .message-edited {
-            font-size: 9px;
-            color: rgba(255,255,255,0.5);
-            margin-left: 5px;
+            line-height: 1.4;
         }
 
         .message-media {
@@ -444,36 +371,6 @@
             justify-content: flex-end;
             gap: 8px;
             align-items: center;
-        }
-
-        .message-actions {
-            position: absolute;
-            right: -30px;
-            top: 50%;
-            transform: translateY(-50%);
-            display: none;
-            gap: 4px;
-            background: #202C33;
-            padding: 4px;
-            border-radius: 20px;
-        }
-
-        .message:hover .message-actions {
-            display: flex;
-        }
-
-        .msg-action-btn {
-            background: none;
-            border: none;
-            font-size: 14px;
-            cursor: pointer;
-            padding: 4px 6px;
-            border-radius: 50%;
-            transition: background 0.2s;
-        }
-
-        .msg-action-btn:hover {
-            background: #2A3942;
         }
 
         .read-status {
@@ -528,6 +425,7 @@
             display: flex;
             gap: 12px;
             align-items: center;
+            border-top: 1px solid #2A3942;
         }
 
         .input-btn {
@@ -537,8 +435,13 @@
             cursor: pointer;
             padding: 8px;
             border-radius: 50%;
-            transition: background 0.2s;
+            transition: all 0.2s;
             color: #8696A0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
         }
 
         .input-btn:hover {
@@ -548,7 +451,7 @@
 
         .message-input {
             flex: 1;
-            padding: 10px 16px;
+            padding: 12px 16px;
             background: #2A3942;
             border: none;
             border-radius: 24px;
@@ -556,6 +459,7 @@
             font-size: 14px;
             resize: none;
             font-family: 'Poppins', sans-serif;
+            max-height: 100px;
         }
 
         .message-input:focus {
@@ -563,7 +467,7 @@
         }
 
         .send-btn {
-            padding: 8px 20px;
+            padding: 10px 24px;
             background: #25D366;
             border: none;
             border-radius: 24px;
@@ -571,6 +475,55 @@
             font-weight: 600;
             cursor: pointer;
             font-family: 'Poppins', sans-serif;
+            transition: all 0.2s;
+            min-width: 80px;
+        }
+
+        .send-btn:hover {
+            background: #1da15a;
+            transform: scale(1.02);
+        }
+
+        .send-btn:disabled {
+            background: #2A3942;
+            cursor: not-allowed;
+        }
+
+        /* Upload Progress */
+        .upload-progress {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            background: #202C33;
+            padding: 12px 20px;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: white;
+            font-size: 14px;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .upload-progress.hidden {
+            display: none;
+        }
+
+        .progress-bar {
+            width: 150px;
+            height: 6px;
+            background: #2A3942;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #25D366;
+            width: 0%;
+            transition: width 0.3s;
+            border-radius: 3px;
         }
 
         /* File Upload Modal */
@@ -615,6 +568,7 @@
             align-items: center;
             gap: 12px;
             transition: background 0.2s;
+            color: white;
         }
 
         .file-option:hover {
@@ -657,43 +611,6 @@
 
         .toggle-switch.active::after {
             left: 27px;
-        }
-
-        /* Edit Message Modal */
-        .edit-input {
-            width: 100%;
-            padding: 12px;
-            background: #2A3942;
-            border: none;
-            border-radius: 12px;
-            color: white;
-            margin: 15px 0;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        .modal-buttons {
-            display: flex;
-            gap: 12px;
-            justify-content: flex-end;
-        }
-
-        .modal-buttons button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 500;
-        }
-
-        .btn-primary {
-            background: #25D366;
-            color: white;
-        }
-
-        .btn-secondary {
-            background: #2A3942;
-            color: white;
         }
 
         /* Emoji Picker */
@@ -752,6 +669,32 @@
             border-radius: 8px;
         }
 
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #e74c3c;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 1100;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
         /* Mobile Responsive */
         @media (max-width: 768px) {
             .sidebar {
@@ -783,9 +726,9 @@
             font-size: 24px;
             cursor: pointer;
             margin-right: 15px;
+            color: white;
         }
 
-        /* Scrollbar */
         ::-webkit-scrollbar {
             width: 6px;
         }
@@ -799,7 +742,6 @@
             border-radius: 3px;
         }
 
-        /* Loading Spinner */
         .spinner {
             display: inline-block;
             width: 16px;
@@ -820,8 +762,8 @@
     <div id="loginScreen" class="login-container">
         <div class="login-card">
             <div class="logo">💬</div>
-            <h1>Project P </h1>
-            <p>Advanced Real-time Messenger</p>
+            <h1>Project P</h1>
+            <p>Real-time Messenger with Cloudinary</p>
             <input type="text" id="userName" class="login-input" placeholder="Enter your name" maxlength="25">
             <div class="avatar-grid" id="avatarGrid">
                 <div class="avatar-option" data-avatar="😀">😀</div>
@@ -870,19 +812,6 @@
                     <div class="chat-title" id="chatTitle">General</div>
                     <div class="member-count" id="memberCount"></div>
                 </div>
-                <div class="chat-actions">
-                    <button class="chat-action-btn" onclick="app.toggleSelectionMode()" title="Select Messages">☑️</button>
-                    <button class="chat-action-btn" onclick="app.clearAllMessages()" title="Clear All Messages">🗑️</button>
-                </div>
-            </div>
-
-            <!-- Selection Bar -->
-            <div id="selectionBar" class="selection-bar">
-                <span id="selectedCount">0 selected</span>
-                <div>
-                    <button onclick="app.deleteSelectedMessages()">Delete Selected</button>
-                    <button onclick="app.cancelSelection()">Cancel</button>
-                </div>
             </div>
 
             <div class="messages-area" id="messagesArea"></div>
@@ -896,15 +825,23 @@
                 <button class="input-btn" onclick="app.openEmojiPicker()">😊</button>
                 <button class="input-btn" onclick="app.openFileUploadModal()">📎</button>
                 <textarea id="messageInput" class="message-input" placeholder="Type a message..." rows="1" onkeypress="app.handleKeyPress(event)"></textarea>
-                <button class="send-btn" onclick="app.sendMessage()">Send</button>
+                <button class="send-btn" onclick="app.sendMessage()" id="sendButton">Send →</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Upload Progress -->
+    <div id="uploadProgress" class="upload-progress hidden">
+        <span>📤 Uploading to Cloudinary...</span>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
         </div>
     </div>
 
     <!-- File Upload Modal -->
     <div id="fileUploadModal" class="modal">
         <div class="modal-content">
-            <h3>Upload File</h3>
+            <h3>Upload to Cloudinary</h3>
             <div class="file-option" onclick="app.uploadImage()">
                 📷 Upload Image
             </div>
@@ -918,33 +855,7 @@
                 <span>View Once Mode</span>
                 <div id="viewOnceToggle" class="toggle-switch" onclick="app.toggleViewOnce()"></div>
             </div>
-            <button class="btn-secondary" onclick="app.closeFileUploadModal()" style="width:100%; margin-top:10px;">Cancel</button>
-        </div>
-    </div>
-
-    <!-- Edit Message Modal -->
-    <div id="editModal" class="modal">
-        <div class="modal-content">
-            <h3>Edit Message</h3>
-            <input type="text" id="editInput" class="edit-input" placeholder="Edit your message...">
-            <div class="modal-buttons">
-                <button class="btn-secondary" onclick="app.closeEditModal()">Cancel</button>
-                <button class="btn-primary" onclick="app.saveEditedMessage()">Save</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Delete Options Modal -->
-    <div id="deleteModal" class="modal">
-        <div class="modal-content">
-            <h3>Delete Message</h3>
-            <div class="file-option" onclick="app.deleteMessageForMe()">
-                🔒 Delete for me
-            </div>
-            <div class="file-option" onclick="app.deleteMessageForEveryone()">
-                🌐 Delete for everyone
-            </div>
-            <button class="btn-secondary" onclick="app.closeDeleteModal()" style="width:100%; margin-top:10px;">Cancel</button>
+            <button class="file-option" onclick="app.closeFileUploadModal()" style="background:#2A3942; justify-content:center;">Cancel</button>
         </div>
     </div>
 
@@ -969,10 +880,21 @@
             appId: "1:564190205574:web:fba28383fd60b733dee307"
         };
 
+        // ============ CLOUDINARY CONFIGURATION ============
+        // REPLACE WITH YOUR CLOUDINARY DETAILS!
+        const CLOUDINARY_CONFIG = {
+            cloudName: "duebhhrk9",  // Get from Cloudinary Dashboard
+            uploadPreset: "chat_uploads",   // Create this in Cloudinary Settings → Upload
+            maxFileSize: {
+                image: 10 * 1024 * 1024,    // 10MB
+                video: 100 * 1024 * 1024,   // 100MB
+                document: 20 * 1024 * 1024  // 20MB
+            }
+        };
+
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
-        const storage = firebase.storage();
         const auth = firebase.auth();
 
         // ============ MAIN APPLICATION ============
@@ -986,21 +908,16 @@
             // UI State
             typingTimeout: null,
             isTyping: false,
-            selectionMode: false,
-            selectedMessages: new Set(),
             viewOnceMode: false,
-            currentEditMessageId: null,
-            currentDeleteMessageId: null,
             
             // File Upload
             pendingFile: null,
-            pendingFileType: null,
 
             // ============ AUTHENTICATION ============
             async login() {
                 const userName = document.getElementById('userName').value.trim();
                 if (!userName) {
-                    alert('Please enter your name');
+                    app.showToast('Please enter your name');
                     return;
                 }
 
@@ -1038,7 +955,7 @@
 
                 } catch (error) {
                     console.error('Login error:', error);
-                    alert('Login failed. Check Firebase configuration!');
+                    app.showToast('Login failed: ' + error.message);
                 }
             },
 
@@ -1048,12 +965,17 @@
                 if (!groupName) return;
 
                 const groupId = 'group_' + Date.now();
-                await database.ref('groups/' + groupId).set({
-                    name: groupName,
-                    createdBy: this.currentUserId,
-                    createdAt: firebase.database.ServerValue.TIMESTAMP,
-                    members: { [this.currentUserId]: true }
-                });
+                try {
+                    await database.ref('groups/' + groupId).set({
+                        name: groupName,
+                        createdBy: this.currentUserId,
+                        createdAt: firebase.database.ServerValue.TIMESTAMP,
+                        members: { [this.currentUserId]: true }
+                    });
+                    app.showToast(`Group "${groupName}" created!`);
+                } catch (error) {
+                    app.showToast('Failed to create group');
+                }
             },
 
             loadGroups() {
@@ -1072,7 +994,7 @@
                         if (group.members && group.members[this.currentUserId]) {
                             const groupDiv = document.createElement('div');
                             groupDiv.className = `group-item ${this.currentGroup === id ? 'active' : ''}`;
-                            groupDiv.innerHTML = `👥 ${group.name}`;
+                            groupDiv.innerHTML = `👥 ${this.escapeHtml(group.name)}`;
                             groupDiv.onclick = () => this.switchGroup(id);
                             groupsList.appendChild(groupDiv);
                         }
@@ -1085,7 +1007,6 @@
                 document.getElementById('chatTitle').innerText = groupId === 'general' ? 'General Chat' : 'Group Chat';
                 document.getElementById('messagesArea').innerHTML = '';
                 this.loadMessages();
-                this.cancelSelection();
                 
                 document.querySelectorAll('.group-item').forEach(item => {
                     item.classList.remove('active');
@@ -1106,7 +1027,7 @@
                             userDiv.innerHTML = `
                                 <div style="font-size: 28px">${user.avatar || '😀'}</div>
                                 <div>
-                                    <div>${user.name}</div>
+                                    <div>${this.escapeHtml(user.name)}</div>
                                     <small style="color:#25D366">● Online</small>
                                 </div>
                             `;
@@ -1131,6 +1052,9 @@
                 
                 if (!text && !this.pendingFile) return;
 
+                const sendBtn = document.getElementById('sendButton');
+                sendBtn.disabled = true;
+
                 this.clearTyping();
 
                 const message = {
@@ -1146,6 +1070,7 @@
                 if (text) {
                     message.text = text;
                     input.value = '';
+                    input.style.height = 'auto';
                 }
 
                 if (this.pendingFile) {
@@ -1161,10 +1086,16 @@
                     document.getElementById('viewOnceToggle').classList.remove('active');
                 }
 
-                const messageRef = database.ref('messages').push();
-                await messageRef.set(message);
-                
-                this.scrollToBottom();
+                try {
+                    const messageRef = database.ref('messages').push();
+                    await messageRef.set(message);
+                    this.scrollToBottom();
+                } catch (error) {
+                    console.error('Send error:', error);
+                    app.showToast('Failed to send message');
+                } finally {
+                    sendBtn.disabled = false;
+                }
             },
 
             loadMessages() {
@@ -1172,16 +1103,6 @@
                 messagesRef.orderByChild('groupId').equalTo(this.currentGroup).on('child_added', (snapshot) => {
                     const message = snapshot.val();
                     this.displayMessage(message, snapshot.key);
-                });
-
-                // Listen for message updates (edits, deletes)
-                messagesRef.on('child_changed', (snapshot) => {
-                    const message = snapshot.val();
-                    this.updateMessageDisplay(snapshot.key, message);
-                });
-
-                messagesRef.on('child_removed', (snapshot) => {
-                    this.removeMessageDisplay(snapshot.key);
                 });
             },
 
@@ -1191,29 +1112,25 @@
                 const isViewOnce = message.viewOnce === true;
                 const isViewed = isViewOnce && message.viewedBy && message.viewedBy.includes(this.currentUserId);
                 
-                if (isViewOnce && isViewed) return;
+                if (isViewOnce && isViewed && !isSent) return;
                 
                 const messageDiv = document.createElement('div');
                 messageDiv.className = `message ${isSent ? 'sent' : 'received'}`;
-                if (isViewOnce && !isViewed) messageDiv.classList.add('view-once');
                 messageDiv.id = `msg-${messageId}`;
-                messageDiv.dataset.messageId = messageId;
                 
-                let content = `<div class="message-sender">${message.userName}</div>`;
+                let content = `<div class="message-sender">${this.escapeHtml(message.userName)}</div>`;
                 
                 if (message.text) {
-                    content += `<div class="message-text">${this.escapeHtml(message.text)}`;
-                    if (message.edited) content += `<span class="message-edited">(edited)</span>`;
-                    content += `</div>`;
+                    content += `<div class="message-text">${this.escapeHtml(message.text)}</div>`;
                 }
                 
                 if (message.fileUrl) {
                     if (message.fileType === 'image') {
-                        content += `<img src="${message.fileUrl}" class="message-media" onclick="app.showImage('${message.fileUrl}', '${messageId}')">`;
+                        content += `<img src="${message.fileUrl}" class="message-media" onclick="app.showImage('${message.fileUrl}', '${messageId}')" loading="lazy">`;
                     } else if (message.fileType === 'video') {
-                        content += `<video src="${message.fileUrl}" controls class="message-media"></video>`;
+                        content += `<video src="${message.fileUrl}" controls class="message-media" preload="metadata"></video>`;
                     } else {
-                        content += `<a href="${message.fileUrl}" download class="message-media" style="display:block; padding:10px; background:#2A3942; border-radius:8px; text-decoration:none; color:#25D366;">📄 ${message.fileName}</a>`;
+                        content += `<a href="${message.fileUrl}" download class="message-media" style="display:block; padding:10px; background:#2A3942; border-radius:8px; text-decoration:none; color:#25D366;">📄 ${this.escapeHtml(message.fileName)}</a>`;
                     }
                 }
                 
@@ -1221,95 +1138,275 @@
                 let readStatus = '';
                 
                 if (isSent) {
-                    if (message.seen) readStatus = '✓✓ Seen';
-                    else if (message.delivered) readStatus = '✓✓ Delivered';
-                    else readStatus = '✓ Sent';
+                    if (message.seen) readStatus = '✓✓';
+                    else if (message.delivered) readStatus = '✓✓';
+                    else readStatus = '✓';
                 }
                 
                 content += `
                     <div class="message-time">
                         ${time}
-                        <span class="read-status">${readStatus}</span>
+                        ${readStatus ? `<span class="read-status">${readStatus}</span>` : ''}
                     </div>
                     <div class="message-reactions" id="reactions-${messageId}"></div>
                 `;
                 
-                // Add action buttons for sent messages
-                if (isSent) {
-                    content += `
-                        <div class="message-actions">
-                            <button class="msg-action-btn" onclick="app.openEditMessage('${messageId}', '${this.escapeHtml(message.text || '')}')">✏️</button>
-                            <button class="msg-action-btn" onclick="app.openDeleteOptions('${messageId}')">🗑️</button>
-                        </div>
-                    `;
-                }
-                
                 messageDiv.innerHTML = content;
                 container.appendChild(messageDiv);
                 
-                // Mark as read if not sent by current user
                 if (!isSent && !message.seen) {
                     this.markAsRead(messageId);
                 }
                 
-                // Load reactions
                 this.loadReactions(messageId);
                 
-                // Handle view-once auto-delete
+                // Auto-mark view-once messages as viewed after 5 seconds
                 if (isViewOnce && !isViewed && !isSent) {
                     setTimeout(() => {
                         this.markViewOnceAsViewed(messageId);
-                    }, 3000); // Auto-mark as viewed after 3 seconds
+                    }, 5000);
                 }
                 
                 this.scrollToBottom();
             },
 
-            updateMessageDisplay(messageId, message) {
-                const messageDiv = document.getElementById(`msg-${messageId}`);
-                if (!messageDiv) return;
-                
-                if (message.text) {
-                    const textDiv = messageDiv.querySelector('.message-text');
-                    if (textDiv) {
-                        textDiv.innerHTML = `${this.escapeHtml(message.text)}${message.edited ? '<span class="message-edited">(edited)</span>' : ''}`;
-                    }
-                }
-            },
-
-            removeMessageDisplay(messageId) {
-                const messageDiv = document.getElementById(`msg-${messageId}`);
-                if (messageDiv) messageDiv.remove();
-            },
-
             async markAsRead(messageId) {
-                const messageRef = database.ref(`messages/${messageId}`);
-                const message = (await messageRef.once('value')).val();
-                
-                if (!message.seen && message.userId !== this.currentUserId) {
-                    await messageRef.update({
-                        seen: true,
-                        seenAt: firebase.database.ServerValue.TIMESTAMP
-                    });
+                try {
+                    const messageRef = database.ref(`messages/${messageId}`);
+                    const message = (await messageRef.once('value')).val();
+                    
+                    if (!message.seen && message.userId !== this.currentUserId) {
+                        await messageRef.update({
+                            seen: true,
+                            seenAt: firebase.database.ServerValue.TIMESTAMP
+                        });
+                    }
+                } catch (error) {
+                    console.error('Mark as read error:', error);
                 }
             },
 
             async markViewOnceAsViewed(messageId) {
-                const messageRef = database.ref(`messages/${messageId}`);
-                const message = (await messageRef.once('value')).val();
-                
-                if (message.viewOnce && (!message.viewedBy || !message.viewedBy.includes(this.currentUserId))) {
-                    const viewedBy = message.viewedBy || [];
-                    viewedBy.push(this.currentUserId);
-                    await messageRef.update({ viewedBy: viewedBy });
+                try {
+                    const messageRef = database.ref(`messages/${messageId}`);
+                    const message = (await messageRef.once('value')).val();
                     
-                    // Remove from UI
-                    const messageDiv = document.getElementById(`msg-${messageId}`);
-                    if (messageDiv) messageDiv.remove();
+                    if (message.viewOnce && (!message.viewedBy || !message.viewedBy.includes(this.currentUserId))) {
+                        const viewedBy = message.viewedBy || [];
+                        viewedBy.push(this.currentUserId);
+                        await messageRef.update({ viewedBy: viewedBy });
+                        
+                        const messageDiv = document.getElementById(`msg-${messageId}`);
+                        if (messageDiv && !messageDiv.classList.contains('sent')) {
+                            messageDiv.remove();
+                        }
+                    }
+                } catch (error) {
+                    console.error('Mark view-once error:', error);
                 }
             },
 
-            // ============ FILE UPLOAD ============
+            // ============ CLOUDINARY UPLOAD FUNCTIONS ============
+            showUploadProgress() {
+                const progressDiv = document.getElementById('uploadProgress');
+                progressDiv.classList.remove('hidden');
+            },
+
+            updateUploadProgress(progress) {
+                const fill = document.getElementById('progressFill');
+                fill.style.width = `${progress}%`;
+            },
+
+            hideUploadProgress() {
+                const progressDiv = document.getElementById('uploadProgress');
+                progressDiv.classList.add('hidden');
+                const fill = document.getElementById('progressFill');
+                fill.style.width = '0%';
+            },
+
+            async uploadToCloudinary(file, type) {
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('upload_preset', CLOUDINARY_CONFIG.uploadPreset);
+                
+                let uploadUrl = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CONFIG.cloudName}/auto/upload`;
+                
+                // For videos, use video-specific endpoint for better handling
+                if (type === 'video') {
+                    uploadUrl = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CONFIG.cloudName}/video/upload`;
+                }
+                
+                return new Promise((resolve, reject) => {
+                    const xhr = new XMLHttpRequest();
+                    
+                    xhr.upload.addEventListener('progress', (e) => {
+                        if (e.lengthComputable) {
+                            const progress = (e.loaded / e.total) * 100;
+                            app.updateUploadProgress(progress);
+                        }
+                    });
+                    
+                    xhr.onload = () => {
+                        if (xhr.status === 200) {
+                            const response = JSON.parse(xhr.responseText);
+                            resolve({
+                                url: response.secure_url,
+                                publicId: response.public_id,
+                                type: type,
+                                name: file.name
+                            });
+                        } else {
+                            reject(new Error('Upload failed with status: ' + xhr.status));
+                        }
+                    };
+                    
+                    xhr.onerror = () => reject(new Error('Network error during upload'));
+                    
+                    xhr.open('POST', uploadUrl);
+                    xhr.send(formData);
+                });
+            },
+
+            async uploadImage() {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = 'image/*';
+                input.onchange = async (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    
+                    if (file.size > CLOUDINARY_CONFIG.maxFileSize.image) {
+                        app.showToast('Image too large! Max 10MB');
+                        return;
+                    }
+                    
+                    this.showUploadProgress();
+                    this.updateUploadProgress(0);
+                    
+                    try {
+                        const result = await this.uploadToCloudinary(file, 'image');
+                        
+                        this.pendingFile = {
+                            url: result.url,
+                            type: 'image',
+                            name: file.name,
+                            publicId: result.publicId
+                        };
+                        
+                        this.hideUploadProgress();
+                        this.closeFileUploadModal();
+                        await this.sendMessage();
+                    } catch (error) {
+                        this.hideUploadProgress();
+                        app.showToast('Upload failed: ' + error.message);
+                        console.error('Upload error:', error);
+                    }
+                };
+                input.click();
+            },
+
+            async uploadVideo() {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = 'video/*';
+                input.onchange = async (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    
+                    if (file.size > CLOUDINARY_CONFIG.maxFileSize.video) {
+                        app.showToast('Video too large! Max 100MB');
+                        return;
+                    }
+                    
+                    this.showUploadProgress();
+                    this.updateUploadProgress(0);
+                    
+                    try {
+                        const result = await this.uploadToCloudinary(file, 'video');
+                        
+                        this.pendingFile = {
+                            url: result.url,
+                            type: 'video',
+                            name: file.name,
+                            publicId: result.publicId
+                        };
+                        
+                        this.hideUploadProgress();
+                        this.closeFileUploadModal();
+                        await this.sendMessage();
+                    } catch (error) {
+                        this.hideUploadProgress();
+                        app.showToast('Upload failed: ' + error.message);
+                        console.error('Upload error:', error);
+                    }
+                };
+                input.click();
+            },
+
+            async uploadDocument() {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = '.pdf,.doc,.docx,.txt,.xls,.xlsx,.ppt,.pptx';
+                input.onchange = async (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    
+                    if (file.size > CLOUDINARY_CONFIG.maxFileSize.document) {
+                        app.showToast('Document too large! Max 20MB');
+                        return;
+                    }
+                    
+                    this.showUploadProgress();
+                    this.updateUploadProgress(0);
+                    
+                    try {
+                        // For documents, upload as raw
+                        const formData = new FormData();
+                        formData.append('file', file);
+                        formData.append('upload_preset', CLOUDINARY_CONFIG.uploadPreset);
+                        formData.append('resource_type', 'raw');
+                        
+                        const xhr = new XMLHttpRequest();
+                        const uploadUrl = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CONFIG.cloudName}/raw/upload`;
+                        
+                        xhr.upload.addEventListener('progress', (e) => {
+                            if (e.lengthComputable) {
+                                const progress = (e.loaded / e.total) * 100;
+                                this.updateUploadProgress(progress);
+                            }
+                        });
+                        
+                        xhr.onload = () => {
+                            if (xhr.status === 200) {
+                                const response = JSON.parse(xhr.responseText);
+                                this.pendingFile = {
+                                    url: response.secure_url,
+                                    type: 'document',
+                                    name: file.name,
+                                    publicId: response.public_id
+                                };
+                                this.hideUploadProgress();
+                                this.closeFileUploadModal();
+                                this.sendMessage();
+                            } else {
+                                throw new Error('Upload failed');
+                            }
+                        };
+                        
+                        xhr.onerror = () => {
+                            throw new Error('Network error');
+                        };
+                        
+                        xhr.open('POST', uploadUrl);
+                        xhr.send(formData);
+                    } catch (error) {
+                        this.hideUploadProgress();
+                        app.showToast('Upload failed: ' + error.message);
+                    }
+                };
+                input.click();
+            },
+
             openFileUploadModal() {
                 document.getElementById('fileUploadModal').classList.add('active');
             },
@@ -1328,245 +1425,18 @@
                 }
             },
 
-            async uploadImage() {
-                const input = document.createElement('input');
-                input.type = 'file';
-                input.accept = 'image/*';
-                input.onchange = async (e) => {
-                    const file = e.target.files[0];
-                    if (!file) return;
-                    
-                    this.showUploadingIndicator();
-                    
-                    try {
-                        const storageRef = storage.ref(`uploads/${Date.now()}_${file.name}`);
-                        await storageRef.put(file);
-                        const url = await storageRef.getDownloadURL();
-                        
-                        this.pendingFile = {
-                            url: url,
-                            type: 'image',
-                            name: file.name
-                        };
-                        
-                        this.closeFileUploadModal();
-                        this.sendMessage();
-                    } catch (error) {
-                        console.error('Upload error:', error);
-                        alert('Upload failed: ' + error.message);
-                    } finally {
-                        this.hideUploadingIndicator();
-                    }
-                };
-                input.click();
-            },
-
-            async uploadVideo() {
-                const input = document.createElement('input');
-                input.type = 'file';
-                input.accept = 'video/*';
-                input.onchange = async (e) => {
-                    const file = e.target.files[0];
-                    if (!file) return;
-                    
-                    this.showUploadingIndicator();
-                    
-                    try {
-                        const storageRef = storage.ref(`uploads/${Date.now()}_${file.name}`);
-                        await storageRef.put(file);
-                        const url = await storageRef.getDownloadURL();
-                        
-                        this.pendingFile = {
-                            url: url,
-                            type: 'video',
-                            name: file.name
-                        };
-                        
-                        this.closeFileUploadModal();
-                        this.sendMessage();
-                    } catch (error) {
-                        console.error('Upload error:', error);
-                        alert('Upload failed: ' + error.message);
-                    } finally {
-                        this.hideUploadingIndicator();
-                    }
-                };
-                input.click();
-            },
-
-            async uploadDocument() {
-                const input = document.createElement('input');
-                input.type = 'file';
-                input.accept = '.pdf,.doc,.docx,.txt,.xls,.xlsx';
-                input.onchange = async (e) => {
-                    const file = e.target.files[0];
-                    if (!file) return;
-                    
-                    this.showUploadingIndicator();
-                    
-                    try {
-                        const storageRef = storage.ref(`uploads/${Date.now()}_${file.name}`);
-                        await storageRef.put(file);
-                        const url = await storageRef.getDownloadURL();
-                        
-                        this.pendingFile = {
-                            url: url,
-                            type: 'document',
-                            name: file.name
-                        };
-                        
-                        this.closeFileUploadModal();
-                        this.sendMessage();
-                    } catch (error) {
-                        console.error('Upload error:', error);
-                        alert('Upload failed: ' + error.message);
-                    } finally {
-                        this.hideUploadingIndicator();
-                    }
-                };
-                input.click();
-            },
-
-            showUploadingIndicator() {
-                const sendBtn = document.querySelector('.send-btn');
-                sendBtn.innerHTML = '<span class="spinner"></span> Uploading...';
-                sendBtn.disabled = true;
-            },
-
-            hideUploadingIndicator() {
-                const sendBtn = document.querySelector('.send-btn');
-                sendBtn.innerHTML = 'Send';
-                sendBtn.disabled = false;
-            },
-
-            // ============ EDIT & DELETE MESSAGES ============
-            openEditMessage(messageId, currentText) {
-                this.currentEditMessageId = messageId;
-                document.getElementById('editInput').value = currentText;
-                document.getElementById('editModal').classList.add('active');
-            },
-
-            closeEditModal() {
-                document.getElementById('editModal').classList.remove('active');
-                this.currentEditMessageId = null;
-            },
-
-            async saveEditedMessage() {
-                const newText = document.getElementById('editInput').value.trim();
-                if (!newText || !this.currentEditMessageId) return;
-                
-                await database.ref(`messages/${this.currentEditMessageId}`).update({
-                    text: newText,
-                    edited: true,
-                    editedAt: firebase.database.ServerValue.TIMESTAMP
-                });
-                
-                this.closeEditModal();
-            },
-
-            openDeleteOptions(messageId) {
-                this.currentDeleteMessageId = messageId;
-                document.getElementById('deleteModal').classList.add('active');
-            },
-
-            closeDeleteModal() {
-                document.getElementById('deleteModal').classList.remove('active');
-                this.currentDeleteMessageId = null;
-            },
-
-            async deleteMessageForMe() {
-                if (!this.currentDeleteMessageId) return;
-                
-                // Hide message from UI only (soft delete for user)
-                const messageDiv = document.getElementById(`msg-${this.currentDeleteMessageId}`);
-                if (messageDiv) messageDiv.remove();
-                
-                this.closeDeleteModal();
-            },
-
-            async deleteMessageForEveryone() {
-                if (!this.currentDeleteMessageId) return;
-                
-                await database.ref(`messages/${this.currentDeleteMessageId}`).remove();
-                this.closeDeleteModal();
-            },
-
-            // ============ SELECT & DELETE CHAT HISTORY ============
-            toggleSelectionMode() {
-                this.selectionMode = !this.selectionMode;
-                const container = document.getElementById('messagesArea');
-                const selectionBar = document.getElementById('selectionBar');
-                
-                if (this.selectionMode) {
-                    container.classList.add('selection-mode');
-                    selectionBar.classList.add('active');
-                } else {
-                    container.classList.remove('selection-mode');
-                    selectionBar.classList.remove('active');
-                    this.selectedMessages.clear();
-                }
-            },
-
-            toggleMessageSelection(messageId) {
-                if (!this.selectionMode) return;
-                
-                const messageDiv = document.getElementById(`msg-${messageId}`);
-                if (this.selectedMessages.has(messageId)) {
-                    this.selectedMessages.delete(messageId);
-                    messageDiv.classList.remove('selected');
-                } else {
-                    this.selectedMessages.add(messageId);
-                    messageDiv.classList.add('selected');
-                }
-                
-                document.getElementById('selectedCount').innerText = `${this.selectedMessages.size} selected`;
-            },
-
-            async deleteSelectedMessages() {
-                if (this.selectedMessages.size === 0) return;
-                
-                if (confirm(`Delete ${this.selectedMessages.size} messages?`)) {
-                    const deletePromises = [];
-                    this.selectedMessages.forEach(messageId => {
-                        deletePromises.push(database.ref(`messages/${messageId}`).remove());
-                    });
-                    
-                    await Promise.all(deletePromises);
-                    this.cancelSelection();
-                }
-            },
-
-            async clearAllMessages() {
-                if (confirm('Delete ALL messages in this chat? This cannot be undone!')) {
-                    const messagesRef = database.ref('messages');
-                    const snapshot = await messagesRef.orderByChild('groupId').equalTo(this.currentGroup).once('value');
-                    const messages = snapshot.val();
-                    
-                    if (messages) {
-                        const deletePromises = [];
-                        Object.keys(messages).forEach(messageId => {
-                            deletePromises.push(database.ref(`messages/${messageId}`).remove());
-                        });
-                        await Promise.all(deletePromises);
-                    }
-                }
-            },
-
-            cancelSelection() {
-                this.selectionMode = false;
-                this.selectedMessages.clear();
-                document.getElementById('messagesArea').classList.remove('selection-mode');
-                document.getElementById('selectionBar').classList.remove('active');
-            },
-
             // ============ REACTIONS ============
             async addReaction(messageId, reaction) {
-                const reactionRef = database.ref(`reactions/${messageId}/${reaction}`);
-                const users = (await reactionRef.once('value')).val() || [];
-                
-                if (!users.includes(this.currentUserId)) {
-                    users.push(this.currentUserId);
-                    await reactionRef.set(users);
+                try {
+                    const reactionRef = database.ref(`reactions/${messageId}/${reaction}`);
+                    const users = (await reactionRef.once('value')).val() || [];
+                    
+                    if (!users.includes(this.currentUserId)) {
+                        users.push(this.currentUserId);
+                        await reactionRef.set(users);
+                    }
+                } catch (error) {
+                    console.error('Reaction error:', error);
                 }
             },
 
@@ -1587,7 +1457,6 @@
                         });
                     }
                     
-                    // Add reaction button
                     const addBtn = document.createElement('span');
                     addBtn.className = 'reaction';
                     addBtn.innerHTML = '+';
@@ -1598,32 +1467,35 @@
 
             showQuickReactions(messageId) {
                 const reactions = ['👍', '❤️', '😂', '😮', '😢', '😡'];
-                const picker = document.getElementById('reactionPicker');
-                if (!picker) {
-                    const div = document.createElement('div');
-                    div.id = 'reactionPicker';
-                    div.className = 'reaction-picker hidden';
-                    document.body.appendChild(div);
-                }
+                const pickerDiv = document.createElement('div');
+                pickerDiv.className = 'reaction-picker';
+                pickerDiv.style.position = 'absolute';
+                pickerDiv.style.background = '#202C33';
+                pickerDiv.style.borderRadius = '20px';
+                pickerDiv.style.padding = '8px';
+                pickerDiv.style.display = 'flex';
+                pickerDiv.style.gap = '8px';
+                pickerDiv.style.zIndex = '100';
                 
-                const pickerDiv = document.getElementById('reactionPicker');
-                pickerDiv.innerHTML = '';
                 reactions.forEach(reaction => {
                     const span = document.createElement('span');
-                    span.className = 'reaction-option';
+                    span.style.fontSize = '20px';
+                    span.style.cursor = 'pointer';
                     span.innerText = reaction;
                     span.onclick = () => {
                         this.addReaction(messageId, reaction);
-                        pickerDiv.classList.add('hidden');
+                        pickerDiv.remove();
                     };
                     pickerDiv.appendChild(span);
                 });
                 
-                pickerDiv.classList.remove('hidden');
+                document.body.appendChild(pickerDiv);
+                const rect = event.target.getBoundingClientRect();
+                pickerDiv.style.top = rect.top - 50 + 'px';
+                pickerDiv.style.left = rect.left + 'px';
+                
                 setTimeout(() => {
-                    document.addEventListener('click', () => {
-                        pickerDiv.classList.add('hidden');
-                    }, { once: true });
+                    document.addEventListener('click', () => pickerDiv.remove(), { once: true });
                 }, 100);
             },
 
@@ -1656,7 +1528,7 @@
                     
                     if (data && data.isTyping && data.userId !== this.currentUserId && data.groupId === this.currentGroup) {
                         indicator.classList.remove('hidden');
-                        indicator.querySelector('span').innerHTML = `${data.userName} is typing`;
+                        indicator.querySelector('span').innerHTML = `${this.escapeHtml(data.userName)} is typing`;
                     } else {
                         indicator.classList.add('hidden');
                     }
@@ -1696,6 +1568,12 @@
             },
 
             // ============ UTILITY FUNCTIONS ============
+            autoResizeTextarea() {
+                const textarea = document.getElementById('messageInput');
+                textarea.style.height = 'auto';
+                textarea.style.height = Math.min(textarea.scrollHeight, 100) + 'px';
+            },
+
             handleKeyPress(event) {
                 if (event.key === 'Enter' && !event.shiftKey) {
                     event.preventDefault();
@@ -1708,7 +1586,6 @@
                 document.getElementById('modalImage').src = url;
                 modal.classList.add('active');
                 
-                // For view-once images, mark as viewed
                 if (messageId) {
                     this.markViewOnceAsViewed(messageId);
                 }
@@ -1716,10 +1593,13 @@
 
             scrollToBottom() {
                 const container = document.getElementById('messagesArea');
-                setTimeout(() => container.scrollTop = container.scrollHeight, 100);
+                setTimeout(() => {
+                    container.scrollTop = container.scrollHeight;
+                }, 100);
             },
 
             escapeHtml(text) {
+                if (!text) return '';
                 const div = document.createElement('div');
                 div.textContent = text;
                 return div.innerHTML;
@@ -1727,6 +1607,14 @@
 
             toggleSidebar() {
                 document.getElementById('sidebar').classList.toggle('open');
+            },
+
+            showToast(message) {
+                const toast = document.createElement('div');
+                toast.className = 'toast';
+                toast.innerText = message;
+                document.body.appendChild(toast);
+                setTimeout(() => toast.remove(), 3000);
             },
 
             logout() {
@@ -1738,6 +1626,9 @@
             }
         };
 
+        // Auto-resize textarea
+        document.getElementById('messageInput').addEventListener('input', () => app.autoResizeTextarea());
+
         // Initialize avatar selection
         document.querySelectorAll('.avatar-option').forEach(avatar => {
             avatar.onclick = () => {
@@ -1747,32 +1638,24 @@
         });
         document.querySelector('.avatar-option').classList.add('selected');
 
-        // Close modals on outside click
+        // Close modals
         document.getElementById('fileUploadModal').onclick = (e) => {
             if (e.target === document.getElementById('fileUploadModal')) {
                 app.closeFileUploadModal();
             }
         };
         
-        document.getElementById('editModal').onclick = (e) => {
-            if (e.target === document.getElementById('editModal')) {
-                app.closeEditModal();
-            }
-        };
-        
-        document.getElementById('deleteModal').onclick = (e) => {
-            if (e.target === document.getElementById('deleteModal')) {
-                app.closeDeleteModal();
+        document.getElementById('imageModal').onclick = (e) => {
+            if (e.target === document.getElementById('imageModal')) {
+                document.getElementById('imageModal').classList.remove('active');
             }
         };
 
-        // Make message selection work
-        document.getElementById('messagesArea').addEventListener('click', (e) => {
-            if (app.selectionMode) {
-                const messageDiv = e.target.closest('.message');
-                if (messageDiv && messageDiv.dataset.messageId) {
-                    app.toggleMessageSelection(messageDiv.dataset.messageId);
-                }
+        // Close emoji picker
+        document.addEventListener('click', (e) => {
+            const emojiPicker = document.getElementById('emojiPicker');
+            if (emojiPicker && !emojiPicker.contains(e.target) && !e.target.classList.contains('input-btn')) {
+                emojiPicker.classList.add('hidden');
             }
         });
     </script>
