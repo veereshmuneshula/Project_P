@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>ChatPro - Real-time Messenger with Cloudinary</title>
+    <title>Project P - Advanced WhatsApp Clone</title>
     
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -176,6 +176,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
+            cursor: pointer;
         }
 
         .user-avatar {
@@ -297,6 +298,27 @@
             margin-top: 4px;
         }
 
+        .chat-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .chat-action-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: background 0.2s;
+            color: #8696A0;
+        }
+
+        .chat-action-btn:hover {
+            background: #2A3942;
+            color: #25D366;
+        }
+
         /* Messages Area */
         .messages-area {
             flex: 1;
@@ -307,6 +329,27 @@
             gap: 8px;
         }
 
+        /* Reply Preview */
+        .reply-preview {
+            background: #202C33;
+            padding: 8px 12px;
+            margin: 5px 0;
+            border-radius: 8px;
+            border-left: 3px solid #25D366;
+            font-size: 12px;
+            color: #8696A0;
+        }
+
+        .reply-preview strong {
+            color: #25D366;
+        }
+
+        .reply-preview .reply-text {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
         /* Message Bubbles */
         .message {
             max-width: 70%;
@@ -314,6 +357,11 @@
             border-radius: 16px;
             position: relative;
             animation: fadeIn 0.3s ease;
+            transition: all 0.2s;
+        }
+
+        .message:hover {
+            transform: scale(1.01);
         }
 
         @keyframes fadeIn {
@@ -362,6 +410,12 @@
             cursor: pointer;
         }
 
+        .audio-message {
+            width: 200px;
+            height: 36px;
+            margin-top: 4px;
+        }
+
         .message-time {
             font-size: 10px;
             color: rgba(255,255,255,0.6);
@@ -375,6 +429,41 @@
 
         .read-status {
             font-size: 10px;
+            cursor: pointer;
+        }
+
+        /* Message Actions */
+        .message-actions {
+            position: absolute;
+            right: -40px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: none;
+            gap: 4px;
+            background: #202C33;
+            padding: 4px;
+            border-radius: 20px;
+            z-index: 10;
+        }
+
+        .message:hover .message-actions {
+            display: flex;
+        }
+
+        .msg-action-btn {
+            background: none;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 50%;
+            transition: background 0.2s;
+            color: #8696A0;
+        }
+
+        .msg-action-btn:hover {
+            background: #2A3942;
+            color: #25D366;
         }
 
         /* Message Reactions */
@@ -418,6 +507,40 @@
             80%, 100% { content: '...'; }
         }
 
+        /* Reply Indicator Bar */
+        .reply-bar {
+            background: #202C33;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 3px solid #25D366;
+            margin: 0 20px;
+            border-radius: 8px;
+        }
+
+        .reply-bar.hidden {
+            display: none;
+        }
+
+        .reply-info {
+            flex: 1;
+            font-size: 12px;
+            color: #8696A0;
+        }
+
+        .reply-info strong {
+            color: #25D366;
+        }
+
+        .cancel-reply {
+            background: none;
+            border: none;
+            color: #8696A0;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
         /* Input Area */
         .input-area {
             padding: 15px 20px;
@@ -447,6 +570,16 @@
         .input-btn:hover {
             background: #2A3942;
             color: #25D366;
+        }
+
+        .input-btn.recording {
+            color: #ff4444;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
         }
 
         .message-input {
@@ -524,6 +657,117 @@
             width: 0%;
             transition: width 0.3s;
             border-radius: 3px;
+        }
+
+        /* Voice Recording */
+        .voice-recording {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #202C33;
+            padding: 15px 25px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .voice-recording.hidden {
+            display: none;
+        }
+
+        .recording-timer {
+            color: #ff4444;
+            font-weight: 600;
+        }
+
+        .recording-wave {
+            display: flex;
+            gap: 3px;
+            align-items: center;
+        }
+
+        .recording-wave span {
+            width: 3px;
+            height: 20px;
+            background: #25D366;
+            animation: wave 0.5s infinite;
+        }
+
+        @keyframes wave {
+            0%, 100% { height: 10px; }
+            50% { height: 25px; }
+        }
+
+        /* Read Receipts Modal */
+        .read-receipts-modal {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #111B21;
+            border-radius: 20px 20px 0 0;
+            padding: 20px;
+            max-height: 70vh;
+            overflow-y: auto;
+            z-index: 1000;
+            transform: translateY(100%);
+            transition: transform 0.3s;
+        }
+
+        .read-receipts-modal.active {
+            transform: translateY(0);
+        }
+
+        .read-receipts-modal h3 {
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .read-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px;
+            border-bottom: 1px solid #2A3942;
+        }
+
+        /* Search Modal */
+        .search-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #111B21;
+            padding: 20px;
+            z-index: 1000;
+            transform: translateY(-100%);
+            transition: transform 0.3s;
+        }
+
+        .search-modal.active {
+            transform: translateY(0);
+        }
+
+        .search-modal input {
+            width: 100%;
+            padding: 12px;
+            background: #2A3942;
+            border: none;
+            border-radius: 24px;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .search-result {
+            padding: 10px;
+            margin: 10px 0;
+            background: #202C33;
+            border-radius: 12px;
+            cursor: pointer;
         }
 
         /* File Upload Modal */
@@ -684,15 +928,8 @@
             animation: slideUp 0.3s ease;
         }
 
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateX(-50%) translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
-            }
+        .toast.success {
+            background: #25D366;
         }
 
         /* Mobile Responsive */
@@ -716,6 +953,10 @@
             
             .menu-toggle {
                 display: block;
+            }
+            
+            .message-actions {
+                right: -35px;
             }
         }
 
@@ -763,7 +1004,7 @@
         <div class="login-card">
             <div class="logo">💬</div>
             <h1>Project P</h1>
-            <p>Real-time Messenger with Cloudinary</p>
+            <p>Advanced WhatsApp Clone</p>
             <input type="text" id="userName" class="login-input" placeholder="Enter your name" maxlength="25">
             <div class="avatar-grid" id="avatarGrid">
                 <div class="avatar-option" data-avatar="😀">😀</div>
@@ -783,7 +1024,7 @@
     <div id="chatContainer" class="chat-container">
         <div class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <div class="user-profile">
+                <div class="user-profile" onclick="app.showUserProfile()">
                     <div class="user-avatar" id="userAvatar">😀</div>
                     <div class="user-name" id="userDisplayName">User</div>
                 </div>
@@ -812,6 +1053,10 @@
                     <div class="chat-title" id="chatTitle">General</div>
                     <div class="member-count" id="memberCount"></div>
                 </div>
+                <div class="chat-actions">
+                    <button class="chat-action-btn" onclick="app.openSearchModal()" title="Search Messages">🔍</button>
+                    <button class="chat-action-btn" onclick="app.clearAllMessages()" title="Clear All Messages">🗑️</button>
+                </div>
             </div>
 
             <div class="messages-area" id="messagesArea"></div>
@@ -821,13 +1066,33 @@
                 <span class="typing-dots"></span>
             </div>
 
+            <!-- Reply Preview Bar -->
+            <div id="replyBar" class="reply-bar hidden">
+                <div class="reply-info">
+                    Replying to <strong id="replyToName"></strong>: 
+                    <span id="replyPreviewText"></span>
+                </div>
+                <button class="cancel-reply" onclick="app.cancelReply()">✕</button>
+            </div>
+
             <div class="input-area">
                 <button class="input-btn" onclick="app.openEmojiPicker()">😊</button>
                 <button class="input-btn" onclick="app.openFileUploadModal()">📎</button>
+                <button class="input-btn" id="voiceBtn" onclick="app.toggleVoiceRecording()">🎤</button>
                 <textarea id="messageInput" class="message-input" placeholder="Type a message..." rows="1" onkeypress="app.handleKeyPress(event)"></textarea>
                 <button class="send-btn" onclick="app.sendMessage()" id="sendButton">Send →</button>
             </div>
         </div>
+    </div>
+
+    <!-- Voice Recording UI -->
+    <div id="voiceRecordingUI" class="voice-recording hidden">
+        <div class="recording-wave">
+            <span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <div class="recording-timer" id="recordingTimer">0:00</div>
+        <button onclick="app.stopVoiceRecording()" style="background:#ff4444; border:none; padding:8px 16px; border-radius:20px; color:white; cursor:pointer;">Stop</button>
+        <button onclick="app.cancelVoiceRecording()" style="background:#2A3942; border:none; padding:8px 16px; border-radius:20px; color:white; cursor:pointer;">Cancel</button>
     </div>
 
     <!-- Upload Progress -->
@@ -859,6 +1124,20 @@
         </div>
     </div>
 
+    <!-- Search Modal -->
+    <div id="searchModal" class="search-modal">
+        <input type="text" id="searchInput" placeholder="Search messages..." oninput="app.searchMessages(this.value)">
+        <div id="searchResults"></div>
+        <button onclick="app.closeSearchModal()" style="margin-top:10px; padding:8px; background:#2A3942; border:none; border-radius:8px; color:white; cursor:pointer;">Close</button>
+    </div>
+
+    <!-- Read Receipts Modal -->
+    <div id="readReceiptsModal" class="read-receipts-modal">
+        <h3>Message Info</h3>
+        <div id="readReceiptsList"></div>
+        <button onclick="app.closeReadReceipts()" style="margin-top:15px; padding:10px; background:#2A3942; border:none; border-radius:8px; color:white; cursor:pointer; width:100%;">Close</button>
+    </div>
+
     <!-- Emoji Picker -->
     <div id="emojiPicker" class="emoji-picker hidden"></div>
 
@@ -869,7 +1148,6 @@
 
     <script>
         // ============ FIREBASE CONFIGURATION ============
-        // REPLACE WITH YOUR FIREBASE CONFIG FROM FIREBASE CONSOLE!
         const firebaseConfig = {
             apiKey: "AIzaSyBU-ic-SGb-Qlxr4JAK2JXXTdetLhhQetI",
             authDomain: "project-p-5c219.firebaseapp.com",
@@ -881,14 +1159,13 @@
         };
 
         // ============ CLOUDINARY CONFIGURATION ============
-        // REPLACE WITH YOUR CLOUDINARY DETAILS!
         const CLOUDINARY_CONFIG = {
-            cloudName: "duebhhrk9",  // Get from Cloudinary Dashboard
-            uploadPreset: "chat_uploads",   // Create this in Cloudinary Settings → Upload
+            cloudName: "duebhhrk9",
+            uploadPreset: "chat_uploads",
             maxFileSize: {
-                image: 10 * 1024 * 1024,    // 10MB
-                video: 100 * 1024 * 1024,   // 100MB
-                document: 20 * 1024 * 1024  // 20MB
+                image: 10 * 1024 * 1024,
+                video: 100 * 1024 * 1024,
+                document: 20 * 1024 * 1024
             }
         };
 
@@ -912,6 +1189,18 @@
             
             // File Upload
             pendingFile: null,
+            
+            // Voice Recording
+            mediaRecorder: null,
+            audioChunks: [],
+            recordingTimer: null,
+            recordingSeconds: 0,
+            
+            // Reply Feature
+            replyingTo: null,
+            
+            // Notification Permission
+            notificationPermission: false,
 
             // ============ AUTHENTICATION ============
             async login() {
@@ -945,6 +1234,7 @@
                     this.loadOnlineUsers();
                     this.loadMessages();
                     this.setupTypingIndicator();
+                    this.requestNotificationPermission();
                     
                     window.addEventListener('beforeunload', () => {
                         database.ref('users/' + this.currentUserId).update({
@@ -956,6 +1246,21 @@
                 } catch (error) {
                     console.error('Login error:', error);
                     app.showToast('Login failed: ' + error.message);
+                }
+            },
+
+            // ============ NOTIFICATIONS ============
+            requestNotificationPermission() {
+                if ('Notification' in window) {
+                    Notification.requestPermission().then(permission => {
+                        this.notificationPermission = permission === 'granted';
+                    });
+                }
+            },
+
+            showNotification(title, body) {
+                if (this.notificationPermission && document.hidden) {
+                    new Notification(title, { body: body, icon: 'https://emojicdn.elk.sh/💬' });
                 }
             },
 
@@ -1007,6 +1312,7 @@
                 document.getElementById('chatTitle').innerText = groupId === 'general' ? 'General Chat' : 'Group Chat';
                 document.getElementById('messagesArea').innerHTML = '';
                 this.loadMessages();
+                this.cancelReply();
                 
                 document.querySelectorAll('.group-item').forEach(item => {
                     item.classList.remove('active');
@@ -1086,6 +1392,16 @@
                     document.getElementById('viewOnceToggle').classList.remove('active');
                 }
 
+                // Add reply data if replying to a message
+                if (this.replyingTo) {
+                    message.replyTo = {
+                        messageId: this.replyingTo.id,
+                        text: this.replyingTo.text,
+                        userName: this.replyingTo.userName
+                    };
+                    this.cancelReply();
+                }
+
                 try {
                     const messageRef = database.ref('messages').push();
                     await messageRef.set(message);
@@ -1103,6 +1419,11 @@
                 messagesRef.orderByChild('groupId').equalTo(this.currentGroup).on('child_added', (snapshot) => {
                     const message = snapshot.val();
                     this.displayMessage(message, snapshot.key);
+                    
+                    // Show notification for new message
+                    if (message.userId !== this.currentUserId && document.hidden) {
+                        this.showNotification(message.userName, message.text || 'Sent a message');
+                    }
                 });
             },
 
@@ -1117,8 +1438,19 @@
                 const messageDiv = document.createElement('div');
                 messageDiv.className = `message ${isSent ? 'sent' : 'received'}`;
                 messageDiv.id = `msg-${messageId}`;
+                messageDiv.dataset.messageId = messageId;
                 
-                let content = `<div class="message-sender">${this.escapeHtml(message.userName)}</div>`;
+                let content = '';
+                
+                // Show reply preview if this is a reply
+                if (message.replyTo) {
+                    content += `<div class="reply-preview">
+                        <strong>↩️ ${this.escapeHtml(message.replyTo.userName)}</strong>
+                        <div class="reply-text">${this.escapeHtml(message.replyTo.text.substring(0, 50))}${message.replyTo.text.length > 50 ? '...' : ''}</div>
+                    </div>`;
+                }
+                
+                content += `<div class="message-sender">${this.escapeHtml(message.userName)}</div>`;
                 
                 if (message.text) {
                     content += `<div class="message-text">${this.escapeHtml(message.text)}</div>`;
@@ -1129,26 +1461,30 @@
                         content += `<img src="${message.fileUrl}" class="message-media" onclick="app.showImage('${message.fileUrl}', '${messageId}')" loading="lazy">`;
                     } else if (message.fileType === 'video') {
                         content += `<video src="${message.fileUrl}" controls class="message-media" preload="metadata"></video>`;
+                    } else if (message.fileType === 'audio') {
+                        content += `<audio src="${message.fileUrl}" controls class="audio-message"></audio>`;
                     } else {
                         content += `<a href="${message.fileUrl}" download class="message-media" style="display:block; padding:10px; background:#2A3942; border-radius:8px; text-decoration:none; color:#25D366;">📄 ${this.escapeHtml(message.fileName)}</a>`;
                     }
                 }
                 
                 const time = new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                let readStatus = '';
-                
-                if (isSent) {
-                    if (message.seen) readStatus = '✓✓';
-                    else if (message.delivered) readStatus = '✓✓';
-                    else readStatus = '✓';
-                }
                 
                 content += `
                     <div class="message-time">
                         ${time}
-                        ${readStatus ? `<span class="read-status">${readStatus}</span>` : ''}
+                        ${isSent ? `<span class="read-status" onclick="app.showReadReceipts('${messageId}')">${message.seen ? '✓✓' : (message.delivered ? '✓✓' : '✓')}</span>` : ''}
                     </div>
                     <div class="message-reactions" id="reactions-${messageId}"></div>
+                `;
+                
+                // Add action buttons for all messages
+                content += `
+                    <div class="message-actions">
+                        <button class="msg-action-btn" onclick="app.replyToMessage('${messageId}', '${this.escapeHtml(message.text || 'Media')}', '${this.escapeHtml(message.userName)}')">↩️</button>
+                        <button class="msg-action-btn" onclick="app.addReactionToMessage('${messageId}')">😊</button>
+                        ${isSent ? `<button class="msg-action-btn" onclick="app.deleteMessage('${messageId}')">🗑️</button>` : ''}
+                    </div>
                 `;
                 
                 messageDiv.innerHTML = content;
@@ -1206,6 +1542,332 @@
                 }
             },
 
+            async deleteMessage(messageId) {
+                if (confirm('Delete this message?')) {
+                    await database.ref(`messages/${messageId}`).remove();
+                }
+            },
+
+            async clearAllMessages() {
+                if (confirm('Delete ALL messages in this chat? This cannot be undone!')) {
+                    const messagesRef = database.ref('messages');
+                    const snapshot = await messagesRef.orderByChild('groupId').equalTo(this.currentGroup).once('value');
+                    const messages = snapshot.val();
+                    
+                    if (messages) {
+                        const deletePromises = [];
+                        Object.keys(messages).forEach(messageId => {
+                            deletePromises.push(database.ref(`messages/${messageId}`).remove());
+                        });
+                        await Promise.all(deletePromises);
+                        app.showToast('Chat cleared!', 'success');
+                    }
+                }
+            },
+
+            // ============ REPLY FEATURE ============
+            replyToMessage(messageId, text, userName) {
+                this.replyingTo = {
+                    id: messageId,
+                    text: text,
+                    userName: userName
+                };
+                
+                const replyBar = document.getElementById('replyBar');
+                document.getElementById('replyToName').innerText = userName;
+                document.getElementById('replyPreviewText').innerText = text.length > 50 ? text.substring(0, 50) + '...' : text;
+                replyBar.classList.remove('hidden');
+                document.getElementById('messageInput').focus();
+            },
+
+            cancelReply() {
+                this.replyingTo = null;
+                document.getElementById('replyBar').classList.add('hidden');
+            },
+
+            // ============ READ RECEIPTS ============
+            async showReadReceipts(messageId) {
+                const messageRef = database.ref(`messages/${messageId}`);
+                const message = (await messageRef.once('value')).val();
+                
+                if (!message) return;
+                
+                const readBy = message.readBy || {};
+                const modal = document.getElementById('readReceiptsModal');
+                const list = document.getElementById('readReceiptsList');
+                
+                list.innerHTML = '<div style="color:#8696A0;">Loading...</div>';
+                modal.classList.add('active');
+                
+                // Get user names for each readBy entry
+                const readUsers = [];
+                for (const [userId] of Object.entries(readBy)) {
+                    const userRef = await database.ref(`users/${userId}`).once('value');
+                    const user = userRef.val();
+                    if (user) {
+                        readUsers.push(user);
+                    }
+                }
+                
+                if (readUsers.length === 0) {
+                    list.innerHTML = '<div style="color:#8696A0;">No one has read this message yet</div>';
+                } else {
+                    list.innerHTML = readUsers.map(user => `
+                        <div class="read-user">
+                            <div style="font-size: 32px">${user.avatar || '😀'}</div>
+                            <div>
+                                <div style="color:white; font-weight:500;">${this.escapeHtml(user.name)}</div>
+                                <small style="color:#25D366">✓✓ Read</small>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            },
+
+            closeReadReceipts() {
+                document.getElementById('readReceiptsModal').classList.remove('active');
+            },
+
+            // ============ SEARCH MESSAGES ============
+            openSearchModal() {
+                document.getElementById('searchModal').classList.add('active');
+                document.getElementById('searchInput').value = '';
+                document.getElementById('searchResults').innerHTML = '';
+                document.getElementById('searchInput').focus();
+            },
+
+            closeSearchModal() {
+                document.getElementById('searchModal').classList.remove('active');
+            },
+
+            async searchMessages(query) {
+                if (!query.trim()) {
+                    document.getElementById('searchResults').innerHTML = '';
+                    return;
+                }
+                
+                const messagesRef = database.ref('messages');
+                const snapshot = await messagesRef.orderByChild('groupId').equalTo(this.currentGroup).once('value');
+                const messages = snapshot.val();
+                const results = [];
+                
+                if (messages) {
+                    Object.entries(messages).forEach(([id, message]) => {
+                        if (message.text && message.text.toLowerCase().includes(query.toLowerCase())) {
+                            results.push({ id, ...message });
+                        }
+                    });
+                }
+                
+                const resultsDiv = document.getElementById('searchResults');
+                if (results.length === 0) {
+                    resultsDiv.innerHTML = '<div style="color:#8696A0; padding:10px; text-align:center;">No messages found</div>';
+                } else {
+                    resultsDiv.innerHTML = results.map(msg => `
+                        <div class="search-result" onclick="app.scrollToMessage('${msg.id}')">
+                            <div style="color:#25D366; font-size:12px;">${this.escapeHtml(msg.userName)}</div>
+                            <div style="color:white; font-size:13px;">${this.escapeHtml(msg.text.substring(0, 100))}${msg.text.length > 100 ? '...' : ''}</div>
+                            <div style="color:#8696A0; font-size:10px;">${new Date(msg.timestamp).toLocaleString()}</div>
+                        </div>
+                    `).join('');
+                }
+            },
+
+            scrollToMessage(messageId) {
+                const messageDiv = document.getElementById(`msg-${messageId}`);
+                if (messageDiv) {
+                    messageDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    messageDiv.style.backgroundColor = '#2A3942';
+                    setTimeout(() => {
+                        messageDiv.style.backgroundColor = '';
+                    }, 2000);
+                    this.closeSearchModal();
+                }
+            },
+
+            // ============ VOICE RECORDING ============
+            async toggleVoiceRecording() {
+                if (this.mediaRecorder && this.mediaRecorder.state === 'recording') {
+                    this.stopVoiceRecording();
+                } else {
+                    this.startVoiceRecording();
+                }
+            },
+
+            async startVoiceRecording() {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    this.mediaRecorder = new MediaRecorder(stream);
+                    this.audioChunks = [];
+                    
+                    this.mediaRecorder.ondataavailable = (event) => {
+                        this.audioChunks.push(event.data);
+                    };
+                    
+                    this.mediaRecorder.onstop = async () => {
+                        const audioBlob = new Blob(this.audioChunks, { type: 'audio/webm' });
+                        await this.uploadAudio(audioBlob);
+                        stream.getTracks().forEach(track => track.stop());
+                    };
+                    
+                    this.mediaRecorder.start();
+                    
+                    // Start timer
+                    this.recordingSeconds = 0;
+                    this.recordingTimer = setInterval(() => {
+                        this.recordingSeconds++;
+                        const minutes = Math.floor(this.recordingSeconds / 60);
+                        const seconds = this.recordingSeconds % 60;
+                        document.getElementById('recordingTimer').innerText = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                    }, 1000);
+                    
+                    document.getElementById('voiceRecordingUI').classList.remove('hidden');
+                    document.getElementById('voiceBtn').classList.add('recording');
+                    
+                } catch (error) {
+                    console.error('Microphone error:', error);
+                    app.showToast('Microphone access denied');
+                }
+            },
+
+            stopVoiceRecording() {
+                if (this.mediaRecorder && this.mediaRecorder.state === 'recording') {
+                    this.mediaRecorder.stop();
+                    clearInterval(this.recordingTimer);
+                    document.getElementById('voiceRecordingUI').classList.add('hidden');
+                    document.getElementById('voiceBtn').classList.remove('recording');
+                }
+            },
+
+            cancelVoiceRecording() {
+                if (this.mediaRecorder && this.mediaRecorder.state === 'recording') {
+                    this.mediaRecorder.onstop = null;
+                    this.mediaRecorder.stop();
+                    clearInterval(this.recordingTimer);
+                    document.getElementById('voiceRecordingUI').classList.add('hidden');
+                    document.getElementById('voiceBtn').classList.remove('recording');
+                }
+            },
+
+            async uploadAudio(audioBlob) {
+                this.showUploadProgress();
+                this.updateUploadProgress(0);
+                
+                const formData = new FormData();
+                formData.append('file', audioBlob, `voice_${Date.now()}.webm`);
+                formData.append('upload_preset', CLOUDINARY_CONFIG.uploadPreset);
+                formData.append('resource_type', 'raw');
+                
+                const xhr = new XMLHttpRequest();
+                const uploadUrl = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CONFIG.cloudName}/raw/upload`;
+                
+                xhr.upload.addEventListener('progress', (e) => {
+                    if (e.lengthComputable) {
+                        const progress = (e.loaded / e.total) * 100;
+                        app.updateUploadProgress(progress);
+                    }
+                });
+                
+                xhr.onload = () => {
+                    if (xhr.status === 200) {
+                        const response = JSON.parse(xhr.responseText);
+                        this.pendingFile = {
+                            url: response.secure_url,
+                            type: 'audio',
+                            name: 'Voice Message'
+                        };
+                        this.hideUploadProgress();
+                        this.sendMessage();
+                    } else {
+                        this.hideUploadProgress();
+                        app.showToast('Voice upload failed');
+                    }
+                };
+                
+                xhr.onerror = () => {
+                    this.hideUploadProgress();
+                    app.showToast('Upload failed');
+                };
+                
+                xhr.open('POST', uploadUrl);
+                xhr.send(formData);
+            },
+
+            // ============ REACTIONS ============
+            async addReaction(messageId, reaction) {
+                try {
+                    const reactionRef = database.ref(`reactions/${messageId}/${reaction}`);
+                    const users = (await reactionRef.once('value')).val() || [];
+                    
+                    if (!users.includes(this.currentUserId)) {
+                        users.push(this.currentUserId);
+                        await reactionRef.set(users);
+                    }
+                } catch (error) {
+                    console.error('Reaction error:', error);
+                }
+            },
+
+            addReactionToMessage(messageId) {
+                const reactions = ['👍', '❤️', '😂', '😮', '😢', '😡'];
+                const pickerDiv = document.createElement('div');
+                pickerDiv.className = 'reaction-picker';
+                pickerDiv.style.position = 'absolute';
+                pickerDiv.style.background = '#202C33';
+                pickerDiv.style.borderRadius = '20px';
+                pickerDiv.style.padding = '8px';
+                pickerDiv.style.display = 'flex';
+                pickerDiv.style.gap = '8px';
+                pickerDiv.style.zIndex = '100';
+                
+                reactions.forEach(reaction => {
+                    const span = document.createElement('span');
+                    span.style.fontSize = '20px';
+                    span.style.cursor = 'pointer';
+                    span.innerText = reaction;
+                    span.onclick = () => {
+                        this.addReaction(messageId, reaction);
+                        pickerDiv.remove();
+                    };
+                    pickerDiv.appendChild(span);
+                });
+                
+                const messageDiv = document.getElementById(`msg-${messageId}`);
+                const rect = messageDiv.getBoundingClientRect();
+                document.body.appendChild(pickerDiv);
+                pickerDiv.style.top = rect.top - 50 + 'px';
+                pickerDiv.style.left = rect.left + 'px';
+                
+                setTimeout(() => {
+                    document.addEventListener('click', () => pickerDiv.remove(), { once: true });
+                }, 100);
+            },
+
+            loadReactions(messageId) {
+                database.ref(`reactions/${messageId}`).on('value', (snapshot) => {
+                    const reactions = snapshot.val();
+                    const container = document.getElementById(`reactions-${messageId}`);
+                    if (!container) return;
+                    
+                    container.innerHTML = '';
+                    if (reactions) {
+                        Object.entries(reactions).forEach(([emoji, users]) => {
+                            const reactionSpan = document.createElement('span');
+                            reactionSpan.className = 'reaction';
+                            reactionSpan.innerHTML = `${emoji} ${users.length}`;
+                            reactionSpan.onclick = () => this.addReaction(messageId, emoji);
+                            container.appendChild(reactionSpan);
+                        });
+                    }
+                    
+                    const addBtn = document.createElement('span');
+                    addBtn.className = 'reaction';
+                    addBtn.innerHTML = '+';
+                    addBtn.onclick = () => this.addReactionToMessage(messageId);
+                    container.appendChild(addBtn);
+                });
+            },
+
             // ============ CLOUDINARY UPLOAD FUNCTIONS ============
             showUploadProgress() {
                 const progressDiv = document.getElementById('uploadProgress');
@@ -1231,7 +1893,6 @@
                 
                 let uploadUrl = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CONFIG.cloudName}/auto/upload`;
                 
-                // For videos, use video-specific endpoint for better handling
                 if (type === 'video') {
                     uploadUrl = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CONFIG.cloudName}/video/upload`;
                 }
@@ -1285,21 +1946,13 @@
                     
                     try {
                         const result = await this.uploadToCloudinary(file, 'image');
-                        
-                        this.pendingFile = {
-                            url: result.url,
-                            type: 'image',
-                            name: file.name,
-                            publicId: result.publicId
-                        };
-                        
+                        this.pendingFile = result;
                         this.hideUploadProgress();
                         this.closeFileUploadModal();
                         await this.sendMessage();
                     } catch (error) {
                         this.hideUploadProgress();
                         app.showToast('Upload failed: ' + error.message);
-                        console.error('Upload error:', error);
                     }
                 };
                 input.click();
@@ -1323,21 +1976,13 @@
                     
                     try {
                         const result = await this.uploadToCloudinary(file, 'video');
-                        
-                        this.pendingFile = {
-                            url: result.url,
-                            type: 'video',
-                            name: file.name,
-                            publicId: result.publicId
-                        };
-                        
+                        this.pendingFile = result;
                         this.hideUploadProgress();
                         this.closeFileUploadModal();
                         await this.sendMessage();
                     } catch (error) {
                         this.hideUploadProgress();
                         app.showToast('Upload failed: ' + error.message);
-                        console.error('Upload error:', error);
                     }
                 };
                 input.click();
@@ -1360,7 +2005,6 @@
                     this.updateUploadProgress(0);
                     
                     try {
-                        // For documents, upload as raw
                         const formData = new FormData();
                         formData.append('file', file);
                         formData.append('upload_preset', CLOUDINARY_CONFIG.uploadPreset);
@@ -1423,80 +2067,6 @@
                 } else {
                     toggle.classList.remove('active');
                 }
-            },
-
-            // ============ REACTIONS ============
-            async addReaction(messageId, reaction) {
-                try {
-                    const reactionRef = database.ref(`reactions/${messageId}/${reaction}`);
-                    const users = (await reactionRef.once('value')).val() || [];
-                    
-                    if (!users.includes(this.currentUserId)) {
-                        users.push(this.currentUserId);
-                        await reactionRef.set(users);
-                    }
-                } catch (error) {
-                    console.error('Reaction error:', error);
-                }
-            },
-
-            loadReactions(messageId) {
-                database.ref(`reactions/${messageId}`).on('value', (snapshot) => {
-                    const reactions = snapshot.val();
-                    const container = document.getElementById(`reactions-${messageId}`);
-                    if (!container) return;
-                    
-                    container.innerHTML = '';
-                    if (reactions) {
-                        Object.entries(reactions).forEach(([emoji, users]) => {
-                            const reactionSpan = document.createElement('span');
-                            reactionSpan.className = 'reaction';
-                            reactionSpan.innerHTML = `${emoji} ${users.length}`;
-                            reactionSpan.onclick = () => this.addReaction(messageId, emoji);
-                            container.appendChild(reactionSpan);
-                        });
-                    }
-                    
-                    const addBtn = document.createElement('span');
-                    addBtn.className = 'reaction';
-                    addBtn.innerHTML = '+';
-                    addBtn.onclick = () => this.showQuickReactions(messageId);
-                    container.appendChild(addBtn);
-                });
-            },
-
-            showQuickReactions(messageId) {
-                const reactions = ['👍', '❤️', '😂', '😮', '😢', '😡'];
-                const pickerDiv = document.createElement('div');
-                pickerDiv.className = 'reaction-picker';
-                pickerDiv.style.position = 'absolute';
-                pickerDiv.style.background = '#202C33';
-                pickerDiv.style.borderRadius = '20px';
-                pickerDiv.style.padding = '8px';
-                pickerDiv.style.display = 'flex';
-                pickerDiv.style.gap = '8px';
-                pickerDiv.style.zIndex = '100';
-                
-                reactions.forEach(reaction => {
-                    const span = document.createElement('span');
-                    span.style.fontSize = '20px';
-                    span.style.cursor = 'pointer';
-                    span.innerText = reaction;
-                    span.onclick = () => {
-                        this.addReaction(messageId, reaction);
-                        pickerDiv.remove();
-                    };
-                    pickerDiv.appendChild(span);
-                });
-                
-                document.body.appendChild(pickerDiv);
-                const rect = event.target.getBoundingClientRect();
-                pickerDiv.style.top = rect.top - 50 + 'px';
-                pickerDiv.style.left = rect.left + 'px';
-                
-                setTimeout(() => {
-                    document.addEventListener('click', () => pickerDiv.remove(), { once: true });
-                }, 100);
             },
 
             // ============ TYPING INDICATOR ============
@@ -1609,12 +2179,16 @@
                 document.getElementById('sidebar').classList.toggle('open');
             },
 
-            showToast(message) {
+            showToast(message, type = 'error') {
                 const toast = document.createElement('div');
-                toast.className = 'toast';
+                toast.className = `toast ${type}`;
                 toast.innerText = message;
                 document.body.appendChild(toast);
                 setTimeout(() => toast.remove(), 3000);
+            },
+
+            showUserProfile() {
+                app.showToast(`Logged in as ${this.currentUser}`, 'success');
             },
 
             logout() {
